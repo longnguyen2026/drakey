@@ -2,14 +2,12 @@ cat << 'EOF' > /home/long/vdkey/setup-build-env.sh
 #!/usr/bin/env bash
 set -e
 
-echo "=== Đang cài đặt môi trường biên dịch cho vdkey (Fcitx5 + Rust) ==="
+echo "=== Đang cài đặt trọn bộ môi trường biên dịch cho vdkey ==="
 
-# 1. Cập nhật danh sách gói
-echo "[1/4] Đang cập nhật danh sách gói hệ thống..."
+# 1. Cập nhật hệ thống
 sudo apt update -y
 
-# 2. Cài đặt các công cụ biên dịch C++, CMake, Ninja
-echo "[2/4] Đang cài đặt công cụ biên dịch cơ bản..."
+# 2. Công cụ build C++, CMake, Ninja & Git
 sudo apt install -y \
     build-essential \
     cmake \
@@ -20,8 +18,7 @@ sudo apt install -y \
     curl \
     git
 
-# 3. Cài đặt thư viện phát triển Fcitx5
-echo "[3/4] Đang cài đặt các thư viện Fcitx5 dev..."
+# 3. Thư viện Fcitx5 dev và các gói giao diện
 sudo apt install -y \
     libfcitx5core-dev \
     libfcitx5config-dev \
@@ -32,11 +29,20 @@ sudo apt install -y \
     fcitx5-frontend-qt5 \
     fcitx5-module-x11
 
-# 4. Cài đặt Cargo và Rustc để biên dịch Bamboo Engine
-echo "[4/4] Đang cài đặt Rust & Cargo..."
+# 4. Thư viện X11, XTest & D-Bus (Bắt buộc cho engine gõ phím)
+sudo apt install -y \
+    libx11-dev \
+    libxtst-dev \
+    libdbus-1-dev \
+    libglib2.0-dev
+
+# 5. Rust & Cargo cho lõi xử lý tiếng Việt Bamboo
 sudo apt install -y cargo rustc
 
-echo "=== Cài đặt hoàn tất! Máy đã sẵn sàng để biên dịch vdkey ==="
+echo "=== ĐÃ CÀI ĐỦ 100% THƯ VIỆN CẦN THIẾT CHO VDKEY ==="
 EOF
 
 chmod +x /home/long/vdkey/setup-build-env.sh
+cd /home/long/vdkey
+git commit -am "fix: add missing X11, XTest and D-Bus build dependencies to setup script"
+git push origin main
